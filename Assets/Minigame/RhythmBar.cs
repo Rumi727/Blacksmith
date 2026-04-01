@@ -143,7 +143,7 @@ namespace Blacksmith.Minigame
             }
         }
 
-        void OnEnable() => isPlaying = true;
+        //void OnEnable() => isPlaying = true;
 
         void Update()
         {
