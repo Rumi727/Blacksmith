@@ -156,13 +156,6 @@ namespace Blacksmith.Minigame
                 return;
             }
 
-            // 총 처리된 노트가 기준 노트보다 크면 게임 종료
-            if (currentProcessedNotes >= noteCount)
-            {
-                isPlaying = false;
-                return;
-            }
-
             currentTime += Time.deltaTime;
 
             // 노트를 1비트 마다 복제하고, 정확한 판정을 위해 기준 시간을 복제된 노트에 전달합니다.
@@ -171,6 +164,15 @@ namespace Blacksmith.Minigame
                 CloneNote(cloneTime);
 
             OnJudgmentUpdate();
+            
+            // 총 처리된 노트가 기준 노트보다 크면 게임 종료
+            if (currentProcessedNotes >= noteCount)
+            {
+                isPlaying = false;
+                onEnd.Invoke(currentScore);
+                
+                return;
+            }
         }
 
         // 연속 4회 이상 생성되지 않게, 가방 시스템을 사용하며 리셋 시에도 중복되지 않게 마지막 노트를 기억하여 다른 노트를 선택
@@ -304,8 +306,7 @@ namespace Blacksmith.Minigame
                 currentProcessedNotes++;
             }
 
-            Debug.Log(judgmentData.id);
-            Debug.Log(currentScore);
+            onJudgment.Invoke(judgmentData);
 
             Destroy(note.gameObject);
             _currentClonedNotes.Remove(note);
